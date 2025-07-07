@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do List</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="box">
+        <h1>Todo List</h1>
+    </div>
+    <div class="box">
+  <% for (var i = 0; i < ejes.length; i++) { %>
+    <div class="task-item">
+      <input type="checkbox" onchange="toggleStrike(this)">
+      <label><%= ejes[i] %></label>
+    </div>
+  <% } %>
+  <form action="/" method="POST">
+    <input type="text" name="elel" placeholder="Enter The Task" required>
+    <button type="submit">+</button>   
+  </form>
+</div>
+
+<script>
+  function toggleStrike(checkbox) {
+    const label = checkbox.nextElementSibling;
+    if (checkbox.checked) {
+      label.classList.add('completed');
+    } else {
+      label.classList.remove('completed');
+    }
+  }
+</script>
+
+</body>
+</html>
