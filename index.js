@@ -38,4 +38,6 @@ app.post("/edit/:index", (req, res) => {
   res.redirect("/");
 });
 
-app.listen(8000, () => console.log("Server started on http://localhost:8000"));
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
