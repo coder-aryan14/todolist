@@ -1,38 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To Do List</title>
-    <link rel="stylesheet" href="/css/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>To Do List</title>
+  <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
-    <div class="box">
-        <h1>Todo List</h1>
-    </div>
-    <div class="box">
-  <% for (var i = 0; i < ejes.length; i++) { %>
-    <div class="task-item">
-      <input type="checkbox" onchange="toggleStrike(this)">
-      <label><%= ejes[i] %></label>
-    </div>
-  <% } %>
-  <form action="/" method="POST">
-    <input type="text" name="elel" placeholder="Enter The Task" required>
-    <button type="submit">+</button>   
-  </form>
-</div>
+  <% include partials/header %>
 
-<script>
-  function toggleStrike(checkbox) {
-    const label = checkbox.nextElementSibling;
-    if (checkbox.checked) {
-      label.classList.add('completed');
-    } else {
-      label.classList.remove('completed');
+  <div class="container">
+    <form action="/add" method="POST" onsubmit="return validateForm()">
+      <input type="text" name="task" id="taskInput" placeholder="Enter a task" />
+      <select name="priority">
+        <option value="normal">Normal</option>
+        <option value="high">High</option>
+        <option value="low">Low</option>
+      </select>
+      <button type="submit">+</button>
+    </form>
+
+    <div class="filter">
+      <form method="GET" action="/">
+        <select name="filter" onchange="this.form.submit()">
+          <option value="">All</option>
+          <option value="high">High</option>
+          <option value="normal">Normal</option>
+          <option value="low">Low</option>
+        </select>
+      </form>
+    </div>
+
+    <ul>
+      <% todos.forEach((todo, index) => { %>
+        <li class="todo-item <%= todo.priority %>">
+          <form action="/edit/<%= index %>" method="POST" class="edit-form">
+            <input type="text" name="editedTask" value="<%= todo.task %>">
+            <button type="submit">Save</button>
+          </form>
+          <form action="/delete/<%= index %>" method="POST" class="inline-form">
+            <button type="submit" class="delete-btn">🗑</button>
+          </form>
+        </li>
+      <% }) %>
+    </ul>
+  </div>
+
+  <% include partials/footer %>
+
+  <script>
+    function validateForm() {
+      const input = document.getElementById('taskInput').value.trim();
+      if (!input) {
+        alert("Task cannot be empty!");
+        return false;
+      }
+      return true;
     }
-  }
-</script>
-
+  </script>
 </body>
 </html>

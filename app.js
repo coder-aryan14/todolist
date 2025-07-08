@@ -1,26 +1,41 @@
 const express = require("express");
-const bodyParser = require("body-parser");
+const path = require("path");
 
-
-
-
-var app = express();
-app.set("view engine","ejs");
+const app = express();
+app.set("view engine", "ejs");
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
-app.use(express.urlencoded({extended:true}));
-var items = [];
-var example = "working"
-app.get("/",function(req,res){
-    res.render("list",{ejes:items})
+
+let todos = [];
+
+app.get("/", (req, res) => {
+  const filter = req.query.filter;
+  const filteredTodos = filter ? todos.filter(t => t.priority === filter) : todos;
+  res.render("list", { todos: filteredTodos });
 });
 
-app.post("/",function(req,res){
-    var item = req.body.elel;
-    items.push(item);
-    res.redirect("/");
+app.post("/add", (req, res) => {
+  const task = req.body.task.trim();
+  const priority = req.body.priority || "normal";
+  if (task) {
+    todos.push({ task, priority });
+  }
+  res.redirect("/");
 });
 
-
-app.listen(8000,function(){
-    console.log("Server started")
+app.post("/delete/:index", (req, res) => {
+  const index = req.params.index;
+  todos.splice(index, 1);
+  res.redirect("/");
 });
+
+app.post("/edit/:index", (req, res) => {
+  const index = req.params.index;
+  const editedTask = req.body.editedTask.trim();
+  if (editedTask) {
+    todos[index].task = editedTask;
+  }
+  res.redirect("/");
+});
+
+app.listen(8000, () => console.log("Server started on http://localhost:8000"));
