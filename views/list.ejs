@@ -2,16 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Todo List</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>To Do List</title>
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
-
   <%- include('partials/header') %>
 
+
   <div class="container">
-    <!-- Create Todo -->
     <form action="/add" method="POST" onsubmit="return validateForm()">
       <input type="text" name="task" id="taskInput" placeholder="Enter a task" />
       <select name="priority">
@@ -22,7 +21,6 @@
       <button type="submit">+</button>
     </form>
 
-    <!-- Filter -->
     <div class="filter">
       <form method="GET" action="/">
         <select name="filter" onchange="this.form.submit()">
@@ -34,15 +32,14 @@
       </form>
     </div>
 
-    <!-- Todo List -->
-    <ul class="todo-list">
-      <% todos.forEach(todo => { %>
+    <ul>
+      <% todos.forEach((todo, index) => { %>
         <li class="todo-item <%= todo.priority %>">
-          <form action="/edit/<%= todo._id %>" method="POST" class="edit-form">
+          <form action="/edit/<%= index %>" method="POST" class="edit-form">
             <input type="text" name="editedTask" value="<%= todo.task %>">
             <button type="submit">Save</button>
           </form>
-          <form action="/delete/<%= todo._id %>" method="POST" class="inline-form">
+          <form action="/delete/<%= index %>" method="POST" class="inline-form">
             <button type="submit" class="delete-btn">🗑</button>
           </form>
         </li>
@@ -52,11 +49,11 @@
 
   <%- include('partials/footer') %>
 
-  <!-- Client-side validation -->
+
   <script>
     function validateForm() {
-      const taskInput = document.getElementById("taskInput").value.trim();
-      if (!taskInput) {
+      const input = document.getElementById('taskInput').value.trim();
+      if (!input) {
         alert("Task cannot be empty!");
         return false;
       }
